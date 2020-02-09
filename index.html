@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+    <script src="bet365-simple.js"></script> 
+
+    <title>&#128561 Bets</title>
+  </head>
+
+  <body style="padding: 10px;">
+
+  <h1>Hello, world!</h1>
+
+  <p>Find #bet365-searchresults and paste bellow html content</p>
+
+  <textarea id="myHtml" rows="10" cols="80">
+  </textarea> 
+
+  <div id="preview" style="display: none; border: 1px solid black; padding: 10px; overflow: hidden;"></div>
+
+  <br /><br />
+
+  Result :<br />
+
+  <div id="result" style="border: 3px solid black; padding: 10px;">
+  </div>
+
+  <br /><br />
+
+  <select id="selector">
+    <option value="bet">Bet365</option>
+    <option value="bet+">Bet365+ (alpha)</option>
+    <option value="placard">Placard</option>
+  </select>
+
+  <button id="go">Go</button>
+
+  <script type="text/javascript">
+
+    $( "#go" ).click(function() {
+
+        // console.log("*********");
+        // console.log("Starting converter");
+        // console.log("*********");
+
+        html = $('#myHtml').val();
+        document.getElementById("preview").innerHTML = html;
+
+        mode = $("#selector").children("option:selected").val();
+
+        if ( mode == "bet" ) {
+
+          children = $("#bet365-searchresults")[0].children;
+
+          my_bets = getBet365Bets(children);
+
+          html = "<table style=\"padding: 5px;\" border=\"1\">";
+          html = html + "<tr>";
+          html = html + "<th>date</th>";
+          html = html + "<th>time</th>";
+          html = html + "<th>stake</th>";
+          html = html + "<th>return</th>";
+          html = html + "<th>matches</th>";
+          html = html + "</tr>";
+
+          my_bets.forEach(function (item, index) {
+
+            html = html + "<tr>";
+            html = html + "<td>" + item.date + "</td>";
+            html = html + "<td>" + item.time + "</td>";
+            html = html + "<td>" + item.stake + "</td>";
+            html = html + "<td>" + item.return + "</td>";
+            html = html + "<td>";
+
+            $.each(( item.matches ), function(index, item) {
+              html = html + "<strong>bet : </strong>" + item.bet + ", ";
+              html = html + "<strong>odd : </strong>" + item.odd + "<br />";
+            });
+
+            html = html + "</td>";
+            html = html + "</tr>";
+
+          });
+
+          html = html + "</table>";
+
+          $("#result")[0].innerHTML = html;
+
+        }
+
+        if ( mode == "bet+" ) {
+
+          alert("Pas encore prêt");
+
+        }
+
+        if ( mode == "placard" ) {
+
+          alert("Pas encore prêt");
+
+        }
+
+    });
+    
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/json2html/1.3.0/json2html.min.js"></script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  </body>
+</html>

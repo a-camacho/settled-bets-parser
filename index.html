@@ -20,7 +20,10 @@
 
   <h1>Hello, world!</h1>
 
-  <p>Find #bet365-searchresults and paste bellow html content</p>
+  <p>
+    <strong>From Bet365 matches :</strong> Find #bet365-searchresults and paste bellow html content<br />
+    <strong>From Bet365 detail :</strong> Find ".bet-confirmation-viewer" + ".bet-breakdown-table" and paste bellow html content<br />
+  </p>
 
   <textarea id="myHtml" rows="10" cols="80">
   </textarea> 
@@ -37,8 +40,8 @@
   <br /><br />
 
   <select id="selector">
-    <option value="bet">Bet365</option>
-    <option value="bet+">Bet365+ (alpha)</option>
+    <option value="betmultiple">Bet365 (multiple)</option>
+    <option value="betsingle">Bet365+ (single)</option>
     <option value="placard">Placard</option>
   </select>
 
@@ -57,49 +60,20 @@
 
         mode = $("#selector").children("option:selected").val();
 
-        if ( mode == "bet" ) {
+        if ( mode == "betmultiple" ) {
 
           children = $("#bet365-searchresults")[0].children;
 
           my_bets = getBet365Bets(children);
 
-          html = "<table style=\"padding: 5px;\" border=\"1\">";
-          html = html + "<tr>";
-          html = html + "<th>date</th>";
-          html = html + "<th>time</th>";
-          html = html + "<th>stake</th>";
-          html = html + "<th>return</th>";
-          html = html + "<th>matches</th>";
-          html = html + "</tr>";
-
-          my_bets.forEach(function (item, index) {
-
-            html = html + "<tr>";
-            html = html + "<td>" + item.date + "</td>";
-            html = html + "<td>" + item.time + "</td>";
-            html = html + "<td>" + item.stake + "</td>";
-            html = html + "<td>" + item.return + "</td>";
-            html = html + "<td>";
-
-            $.each(( item.matches ), function(index, item) {
-              html = html + "<strong>bet : </strong>" + item.bet + ", ";
-              html = html + "<strong>odd : </strong>" + item.odd + "<br />";
-            });
-
-            html = html + "</td>";
-            html = html + "</tr>";
-
-          });
-
-          html = html + "</table>";
-
-          $("#result")[0].innerHTML = html;
-
         }
 
-        if ( mode == "bet+" ) {
+        if ( mode == "betsingle" ) {
+          
+          htmlBet = $(".bet-confirmation-viewer")[0];
+          htmlTable = $(".bet-breakdown-table")[0];
 
-          alert("Pas encore prêt");
+          my_bets = getBet365DetailedBet( htmlBet, htmlTable );
 
         }
 
@@ -108,6 +82,73 @@
           alert("Pas encore prêt");
 
         }
+
+        html = "<table cellpadding='10' border='1'>";
+        html = html + "<tr>";
+        html = html + "<th>date</th>";
+        html = html + "<th>time</th>";
+        html = html + "<th>stake</th>";
+        html = html + "<th>odd</th>";
+        html = html + "<th>status</th>";
+        html = html + "<th>return</th>";
+        html = html + "<th>matches</th>";
+        html = html + "</tr>";
+
+        my_bets.forEach(function (item, index) {
+
+          html = html + "<tr>";
+          html = html + "<td>" + item.date + "</td>";
+          html = html + "<td>" + item.time + "</td>";
+          html = html + "<td>" + item.stake + "</td>";
+
+          if ( item.odd ) {
+            html = html + "<td>" + item.odd + "</td>";
+          } else {
+            html = html + "<td></td>";
+          }
+
+          if ( item.status ) {
+            html = html + "<td>" + item.status + "</td>";
+          } else {
+            html = html + "<td></td>";
+          }
+
+          html = html + "<td>" + item.return + "</td>";
+          html = html + "<td>";
+
+          $.each(( item.matches ), function(index, item) {
+
+            if ( item.matchdetail ) {
+              html = html + "<strong>matchdetail : </strong>" + item.matchdetail + "<br />";
+            }
+
+            if ( item.bettype ) {
+              html = html + "<strong>bettype : </strong>" + item.bettype + "<br />";
+            }
+
+            html = html + "<strong>bet : </strong>" + item.bet + "<br />";
+            html = html + "<strong>odd : </strong>" + item.odd + "<br />";
+
+            if ( item.betresult ) {
+              html = html + "<strong>betresult : </strong>" + item.betresult + "<br />";
+            }
+
+            if ( item.matchdate ) {
+              html = html + "<strong>matchdate : </strong>" + item.matchdate + "<br />";
+            }
+
+            html = html + "<hr>";
+
+          });
+
+          html = html + "</td>";
+          html = html + "</tr>";
+
+        });
+
+        html = html + "</table>";
+
+        $("#result")[0].innerHTML = html;
 
     });
     

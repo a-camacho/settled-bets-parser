@@ -1,5 +1,8 @@
 javascript: void((function(){
 
+  var iframeplacard = document.querySelector('.ta-tableContainer');
+  iframeplacard = iframeplacard.outerHTML;
+
   var iframe = document.querySelector('#MembersHostFrame');
   iframe = iframe.contentWindow.document;
   iframe = iframe.querySelector('.historyV3Iframe');
@@ -15,7 +18,7 @@ javascript: void((function(){
   iframe2 = iframe2.querySelector('.bet-breakdown-table');
   var html2 = iframe2.outerHTML;
 
-  result = html + html2;
+  result = html + html2 + iframeplacard;
 
   console.log(result);
 

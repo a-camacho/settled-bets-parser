@@ -14,6 +14,77 @@
     return string;
   }
 
+  function getBetHTMLTable( my_bets ) {
+
+    html = "<table cellpadding='10' border='1'>";
+    html = html + "<tr>";
+    html = html + "<th>date</th>";
+    html = html + "<th>time</th>";
+    html = html + "<th>stake</th>";
+    html = html + "<th>odd</th>";
+    html = html + "<th>status</th>";
+    html = html + "<th>return</th>";
+    html = html + "<th>matches</th>";
+    html = html + "</tr>";
+
+    my_bets.forEach(function (item, index) {
+
+      html = html + "<tr>";
+      html = html + "<td>" + item.date + "</td>";
+      html = html + "<td>" + item.time + "</td>";
+      html = html + "<td>" + item.stake + "</td>";
+
+      if ( item.odd ) {
+        html = html + "<td>" + item.odd + "</td>";
+      } else {
+        html = html + "<td></td>";
+      }
+
+      if ( item.status ) {
+        html = html + "<td>" + item.status + "</td>";
+      } else {
+        html = html + "<td></td>";
+      }
+
+      html = html + "<td>" + item.return + "</td>";
+      html = html + "<td>";
+
+      $.each(( item.matches ), function(index, item) {
+
+        if ( item.matchdetail ) {
+          html = html + "<strong>matchdetail : </strong>" + item.matchdetail + "<br />";
+        }
+
+        if ( item.bettype ) {
+          html = html + "<strong>bettype : </strong>" + item.bettype + "<br />";
+        }
+
+        html = html + "<strong>bet : </strong>" + item.bet + "<br />";
+        html = html + "<strong>odd : </strong>" + item.odd + "<br />";
+
+        if ( item.betresult ) {
+          html = html + "<strong>betresult : </strong>" + item.betresult + "<br />";
+        }
+
+        if ( item.matchdate ) {
+          html = html + "<strong>matchdate : </strong>" + item.matchdate + "<br />";
+        }
+
+        html = html + "<hr>";
+
+      });
+
+      html = html + "</td>";
+      html = html + "</tr>";
+
+    });
+
+    html = html + "</table>";
+
+    return html;
+
+  }
+
   function getBet365Bets( children ) {
 
   my_bets = [];

@@ -20,61 +20,97 @@
     html = html + "<tr>";
     html = html + "<th>date</th>";
     html = html + "<th>time</th>";
-    html = html + "<th>stake</th>";
+    html = html + "<th>teams (a)</th>";
+    html = html + "<th>teams (b)</th>";
+    html = html + "<th>bet type</th>";
+    html = html + "<th>bet choices</th>";
     html = html + "<th>odd</th>";
-    html = html + "<th>status</th>";
-    html = html + "<th>return</th>";
-    html = html + "<th>matches</th>";
+    html = html + "<th>stake</th>";
+    html = html + "<th>potential win</th>";
+    html = html + "<th>win</th>";
+    html = html + "<th>cash out</th>";
     html = html + "</tr>";
 
     my_bets.forEach(function (item, index) {
 
-      html = html + "<tr>";
-      html = html + "<td>" + item.date + "</td>";
-      html = html + "<td>" + item.time + "</td>";
-      html = html + "<td>" + item.stake + "</td>";
+    html = html + "<tr>";
+    
+      html = html + "<td>" + item.date.replace(/\//g, '.') + "</td>";
+      
+      var newtime = item.time.split(":");
+      html = html + "<td>" + newtime[0] + "h" + newtime[1] + "</td>";
+	      
+	  var aTeams = [];
+	  var bTeams = [];
+	  var betTypes = [];
+	  var betChoices = [];
+
+      $.each(( item.matches ), function(index, item) {
+	      
+	    var teams = item.matchdetail.split(" v ");
+	      
+	    aTeams.push(teams[0]); 
+	    bTeams.push(teams[1]);
+	    betTypes.push(item.bettype);
+	    betChoices.push(item.bet);
+	   
+      });
+
+	  var tmp = "";
+	  html = html + "<td>";
+	    if ( aTeams ) {
+	      aTeams.forEach(element => tmp = tmp + element + " | ");
+	      tmp = tmp.slice(0, -2);
+	      html = html + tmp;
+	    }
+	  html = html + "</td>";
+	  
+	  tmp = "";
+	  html = html + "<td>";
+	    if ( bTeams ) {
+	      bTeams.forEach(element => tmp = tmp + element + " | ");
+	      tmp = tmp.slice(0, -2);
+	      html = html + tmp;
+	    }
+	  html = html + "</td>";
+	  
+	  tmp = "";
+	  html = html + "<td>";
+	    if ( betTypes ) {
+	      betTypes.forEach(element => tmp = tmp + element + " | ");
+	      tmp = tmp.slice(0, -2);
+	      html = html + tmp;
+	    }
+	  html = html + "</td>";
+	  
+	  tmp = "";
+	  html = html + "<td>";
+	    if ( betChoices ) {
+	      betChoices.forEach(element => tmp = tmp + element + " | ");
+	      tmp = tmp.slice(0, -2);
+	      html = html + tmp;
+	    }
+	  html = html + "</td>";
 
       if ( item.odd ) {
-        html = html + "<td>" + item.odd + "</td>";
+        html = html + "<td>" + parseFloat(item.odd) + "</td>";
       } else {
         html = html + "<td></td>";
       }
+      
+      html = html + "<td>" + parseFloat(item.stake.split(" ")[0]) + "</td>";
+
+      html = html + "<td>" + parseFloat(item.stake.split(" ")[0]) * parseFloat(item.odd) + "</td>";
 
       if ( item.status ) {
+	    item.status = "Lost" ? "0" : "1";
         html = html + "<td>" + item.status + "</td>";
       } else {
         html = html + "<td></td>";
       }
 
-      html = html + "<td>" + item.return + "</td>";
-      html = html + "<td>";
-
-      $.each(( item.matches ), function(index, item) {
-
-        if ( item.matchdetail ) {
-          html = html + "<strong>matchdetail : </strong>" + item.matchdetail + "<br />";
-        }
-
-        if ( item.bettype ) {
-          html = html + "<strong>bettype : </strong>" + item.bettype + "<br />";
-        }
-
-        html = html + "<strong>bet : </strong>" + item.bet + "<br />";
-        html = html + "<strong>odd : </strong>" + item.odd + "<br />";
-
-        if ( item.betresult ) {
-          html = html + "<strong>betresult : </strong>" + item.betresult + "<br />";
-        }
-
-        if ( item.matchdate ) {
-          html = html + "<strong>matchdate : </strong>" + item.matchdate + "<br />";
-        }
-
-        html = html + "<hr>";
-
-      });
-
-      html = html + "</td>";
+      html = html + "<td>" + parseFloat(item.return.split(" ")[0]) + "</td>";
+      
       html = html + "</tr>";
 
     });

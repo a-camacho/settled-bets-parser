@@ -48,6 +48,6 @@ document.body.removeChild(node);
 console.log(result);
 console.log("end");
 
-window.open('https://labs.camacho.pt/bet-parser/', '_blank');
+window.open('https://home.camacho.pt/labs/bet-parser/', '_blank');
 
 })());

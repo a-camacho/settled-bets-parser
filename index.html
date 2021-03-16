@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -12,107 +11,122 @@
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
         crossorigin="anonymous"></script>
     <script src="bet365-simple.js"></script> 
-    <script src="placard.js"></script> 
+    <script src="placard.js"></script>
+    
+	<style>
+	body { background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABZ0RVh0Q3JlYXRpb24gVGltZQAxMC8yOS8xMiKqq3kAAAAcdEVYdFNvZnR3YXJlAEFkb2JlIEZpcmV3b3JrcyBDUzVxteM2AAABHklEQVRIib2Vyw6EIAxFW5idr///Qx9sfG3pLEyJ3tAwi5EmBqRo7vHawiEEERHS6x7MTMxMVv6+z3tPMUYSkfTM/R0fEaG2bbMv+Gc4nZzn+dN4HAcREa3r+hi3bcuu68jLskhVIlW073tWaYlQ9+F9IpqmSfq+fwskhdO/AwmUTJXrOuaRQNeRkOd5lq7rXmS5InmERKoER/QMvUAPlZDHcZRhGN4CSeGY+aHMqgcks5RrHv/eeh455x5KrMq2yHQdibDO6ncG/KZWL7M8xDyS1/MIO0NJqdULLS81X6/X6aR0nqBSJcPeZnlZrzN477NKURn2Nus8sjzmEII0TfMiyxUuxphVWjpJkbx0btUnshRihVv70Bv8ItXq6Asoi/ZiCbU6YgAAAABJRU5ErkJggg==);}
+		.error-template {padding: 40px 15px;text-align: center;}
+		.error-actions {margin-top:15px;margin-bottom:15px;}
+		.error-actions .btn { margin-right:10px; }
+	</style>
 
     <title>&#128561 Bets</title>
   </head>
 
   <body style="padding: 10px;">
 
-  <h1>Hello, world!</h1>
+  	<div class="row">
+	  	<div class="container">
+		  	
+		  	  <img src="assets/svg/rocket.svg" class="mx-auto d-block" style="max-width: 200px;">
 
-  <p>
-    <h3>Manual selection</h3>
-    <strong>From Bet365 matches :</strong> Find #bet365-searchresults and paste bellow html content<br />
-    <strong>From Bet365 detail :</strong> Find ".bet-confirmation-viewer" + ".bet-breakdown-table" and paste bellow html content<br />
-    <strong>From Placard detail :</strong> Find ".ta-tableContainer" and paste bellow html content<br />
-    <h3>Bookmarklet <small>(only works in chrome)</small></h3>
+			  <p>
+			    <h3>Manual selection</h3>
+			    <strong>From Bet365 matches :</strong> Find #bet365-searchresults and paste bellow html content<br />
+			    <strong>From Bet365 detail :</strong> Find ".bet-confirmation-viewer" + ".bet-breakdown-table" and paste bellow html content<br />
+			    <strong>From Placard detail :</strong> Find ".ta-tableContainer" and paste bellow html content<br />
+			    <h3>Bookmarklet <small>(only works in chrome)</small></h3>
+			
+			    <a title="BetCopy" href='javascript:void function(){var iframeplacard=null;if(document.querySelector(".ta-tableContainer")){iframeplacard=document.querySelector(".ta-tableContainer");iframeplacard=iframeplacard.outerHTML}var iframe=document.querySelector("#MembersHostFrame");iframe=iframe.contentWindow.document;iframe=iframe.querySelector(".historyV3Iframe");iframe=iframe.contentWindow.document;iframe=iframe.querySelector(".bet-confirmation-viewer");var html=iframe.outerHTML;var iframe2=document.querySelector("#MembersHostFrame");iframe2=iframe2.contentWindow.document;iframe2=iframe2.querySelector(".historyV3Iframe");iframe2=iframe2.contentWindow.document;iframe2=iframe2.querySelector(".bet-breakdown-table");var html2=iframe2.outerHTML;result=html+html2+iframeplacard;var node=document.createElement("textarea");var selection=document.getSelection();node.textContent=result;document.body.appendChild(node);selection.removeAllRanges();node.select();document.execCommand("copy");selection.removeAllRanges();document.body.removeChild(node);console.log(result);console.log("end");window.open("https://home.camacho.pt/labs/bet-parser/","_blank")}();'>
+			      <img title="BetCopy" src="https://support.start.me/hc/article_attachments/360008872939/bookmarksbar.png" alt="BetCopy" border="0">
+			    </a>
+			  </p>
+			
+			  <textarea id="myHtml" rows="10" cols="80">
+			  </textarea> 
+			
+			  <div id="preview" style="display: none; border: 1px solid black; padding: 10px; overflow: hidden;"></div>
+			
+			  <br /><br />
+			
+			  Result :<br />
+			
+			  <div id="result" style="border: 3px solid black; padding: 10px;">
+			  </div>
+			
+			  <br /><br />
+			
+			  <select id="selector">
+			    <option value="betmultiple">Bet365 (multiple)</option>
+			    <option value="betsingle">Bet365+ (single)</option>
+			    <option value="placard">Placard</option>
+			  </select>
+			
+			  <button id="go">Go</button>
+			
+			  <script type="text/javascript">
+			
+			    $( "#go" ).click(function() {
+			
+			        // console.log("*********");
+			        // console.log("Starting converter");
+			        // console.log("*********");
+			
+			        html = $('#myHtml').val();
+			        document.getElementById("preview").innerHTML = html;
+			
+			        mode = $("#selector").children("option:selected").val();
+			
+			        if ( mode == "betmultiple" ) {
+			
+			          children = $("#bet365-searchresults")[0].children;
+			
+			          my_bets = getBet365Bets(children);
+			
+			          html = getBetHTMLTable(my_bets);
+			
+			          $("#result")[0].innerHTML = html;
+			
+			        }
+			
+			        if ( mode == "betsingle" ) {
+			          
+			          htmlBet = $(".bet-confirmation-viewer")[0];
+			          htmlTable = $(".bet-breakdown-table")[0];
+			
+			          my_bets = getBet365DetailedBet( htmlBet, htmlTable );
+			
+			          html = getBetHTMLTable( my_bets );
+			
+			          $("#result")[0].innerHTML = html;
+			
+			        }
+			
+			        if ( mode == "placard" ) {
+			          
+			          htmlTable = $(".ta-tableContainer")[0];
+			          my_bets = getPlacardBets( htmlTable );
+			
+			          html = getPlacardHTMLTable(my_bets);
+			
+			          $("#result")[0].innerHTML = html;
+			
+			        }
+			
+			    });
+			    
+			  </script>
+		  	
+	  	</div>
+  	</div>
 
-    <a title="BetCopy" href='javascript:void function(){var iframeplacard=null;if(document.querySelector(".ta-tableContainer")){iframeplacard=document.querySelector(".ta-tableContainer");iframeplacard=iframeplacard.outerHTML}var iframe=document.querySelector("#MembersHostFrame");iframe=iframe.contentWindow.document;iframe=iframe.querySelector(".historyV3Iframe");iframe=iframe.contentWindow.document;iframe=iframe.querySelector(".bet-confirmation-viewer");var html=iframe.outerHTML;var iframe2=document.querySelector("#MembersHostFrame");iframe2=iframe2.contentWindow.document;iframe2=iframe2.querySelector(".historyV3Iframe");iframe2=iframe2.contentWindow.document;iframe2=iframe2.querySelector(".bet-breakdown-table");var html2=iframe2.outerHTML;result=html+html2+iframeplacard;var node=document.createElement("textarea");var selection=document.getSelection();node.textContent=result;document.body.appendChild(node);selection.removeAllRanges();node.select();document.execCommand("copy");selection.removeAllRanges();document.body.removeChild(node);console.log(result);console.log("end");window.open("https://labs.camacho.pt/bet-parser/","_blank")}();'>
-      <img title="BetCopy" src="https://support.start.me/hc/article_attachments/360008872939/bookmarksbar.png" alt="BetCopy" border="0">
-    </a>
-  </p>
+	<!-- JSON to HTML -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/json2html/1.3.0/json2html.min.js"></script>
+	
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
-  <textarea id="myHtml" rows="10" cols="80">
-  </textarea> 
-
-  <div id="preview" style="display: none; border: 1px solid black; padding: 10px; overflow: hidden;"></div>
-
-  <br /><br />
-
-  Result :<br />
-
-  <div id="result" style="border: 3px solid black; padding: 10px;">
-  </div>
-
-  <br /><br />
-
-  <select id="selector">
-    <option value="betmultiple">Bet365 (multiple)</option>
-    <option value="betsingle">Bet365+ (single)</option>
-    <option value="placard">Placard</option>
-  </select>
-
-  <button id="go">Go</button>
-
-  <script type="text/javascript">
-
-    $( "#go" ).click(function() {
-
-        // console.log("*********");
-        // console.log("Starting converter");
-        // console.log("*********");
-
-        html = $('#myHtml').val();
-        document.getElementById("preview").innerHTML = html;
-
-        mode = $("#selector").children("option:selected").val();
-
-        if ( mode == "betmultiple" ) {
-
-          children = $("#bet365-searchresults")[0].children;
-
-          my_bets = getBet365Bets(children);
-
-          html = getBetHTMLTable(my_bets);
-
-          $("#result")[0].innerHTML = html;
-
-        }
-
-        if ( mode == "betsingle" ) {
-          
-          htmlBet = $(".bet-confirmation-viewer")[0];
-          htmlTable = $(".bet-breakdown-table")[0];
-
-          my_bets = getBet365DetailedBet( htmlBet, htmlTable );
-
-          html = getBetHTMLTable( my_bets );
-
-          $("#result")[0].innerHTML = html;
-
-        }
-
-        if ( mode == "placard" ) {
-          
-          htmlTable = $(".ta-tableContainer")[0];
-          my_bets = getPlacardBets( htmlTable );
-
-          html = getPlacardHTMLTable(my_bets);
-
-          $("#result")[0].innerHTML = html;
-
-        }
-
-    });
-    
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/json2html/1.3.0/json2html.min.js"></script>
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
   </body>
 </html>
